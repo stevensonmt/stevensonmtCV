@@ -1,9 +1,0 @@
-title: Curriculum Vitae
-url: 'https://stevensonmt.github.io/online-cv/'
-baseurl: '/online-cv' #change it according to your repository name
-
-
-#Profile information
-name: Matthew Stevenson, M.D.
-tagline: Board-certified neurologist with fellowship training in clinical neurophysiology and epilepsy.
-pic: profile.png  #place a 100x100 picture inside /assets/images/ folder and provide the name of the file below
