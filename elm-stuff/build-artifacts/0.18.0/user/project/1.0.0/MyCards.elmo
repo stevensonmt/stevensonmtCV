@@ -1,5 +1,0 @@
-var _user$project$MyCards$Model = F3(
-	function (a, b, c) {
-		return {name: a, gridArea: b, gridTemplateArea: c};
-	});
-var _user$project$MyCards$GridTemplateArea = {};
