@@ -1,16 +1,93 @@
 module MyCV exposing (..)
 
---import Html exposing (..)
---import Html.Attributes exposing (class, style)
-
-import Html
-import Html.Attributes
-import Color
-import Style
-import Style.Font as Font
-import Style.Color as Color
 import Element exposing (..)
-import Element.Attributes exposing (..)
+import Element.Background as Background
+import Element.Border as Border
+import Element.Font as Font
+import Element.Input
+import Element.Lazy
+
+
+type MyFonts
+    = Headline
+    | PrimarySans
+    | SecondarySans
+    | PrimarySerif
+    | SecondarySerif
+    | Fallback
+
+
+type ColorPalette
+    = Primary
+    | PrimaryDark
+    | PrimaryLight
+    | Secondary
+    | SecondaryDark
+    | SecondaryLight
+    | Highlight
+    | Alert
+    | White
+    | Black
+
+
+fontStack : MyFonts -> Font.Font
+fontStack font =
+    case font of
+        Headline ->
+            Font.external { url = "https://fonts.googleapis.com/css?family=Dosis", name = "dosis" }
+
+        PrimarySans ->
+            Font.external { url = "https://fonts.googleapis.com/css?family=Roboto", name = "roboto" }
+
+        SecondarySans ->
+            Font.sansSerif
+
+        PrimarySerif ->
+            Font.external { url = "https://fonts.googleapis.com/css?family=Esteban", name = "esteban" }
+
+        SecondarySerif ->
+            Font.serif
+
+        Fallback ->
+            Font.sansSerif
+
+
+colorPalette : ColorPalette -> Color
+colorPalette color =
+    case color of
+        Primary ->
+            rgba255 100 100 100 1
+
+        --96 125 139 1
+        PrimaryDark ->
+            rgba255 69 90 100 1
+
+        PrimaryLight ->
+            rgba255 200 200 200 1
+
+        --207 216 220 1
+        Secondary ->
+            rgba255 200 100 50 1
+
+        --156 39 176 1
+        SecondaryDark ->
+            rgba255 123 31 162 1
+
+        SecondaryLight ->
+            rgba255 213 192 182 1
+
+        --225 190 231 1
+        Highlight ->
+            rgba 254 128 25 1
+
+        Alert ->
+            rgba 207 80 75 1
+
+        White ->
+            rgba 233 236 250 1
+
+        Black ->
+            rgba 0 0 0 1
 
 
 type alias Model =
@@ -62,154 +139,8 @@ type alias Certs =
     List String
 
 
-type CVCategory
-    = CVExperience
-    | CVEducation
-    | CVTraining
-    | CVPublications
-    | CVInterests
-    | CVCerts
-
-
-type MyStyles
-    = Header
-    | HeaderText
-    | Card
-    | CardHeader
-    | CardSubheader
-    | CardText
-    | None
-    | Background
-
-
-type MyColors
-    = DarkPrimary
-    | Primary
-    | LightPrimary
-    | DarkSecondary
-    | Secondary
-    | LightSecondary
-    | PrimaryText
-    | SecondaryText
-    | White
-    | Black
-
-
-type MyFonts
-    = Headline
-    | PrimarySans
-    | SecondarySans
-    | PrimarySerif
-    | SecondarySerif
-    | Fallback
-
-
-fontStack : MyFonts -> Style.Font
-fontStack font =
-    case font of
-        Headline ->
-            Font.importUrl { url = "https://fonts.googleapis.com/css?family=Dosis", name = "dosis" }
-
-        PrimarySans ->
-            Font.importUrl { url = "https://fonts.googleapis.com/css?family=Roboto", name = "roboto" }
-
-        SecondarySans ->
-            Font.sansSerif
-
-        PrimarySerif ->
-            Font.importUrl { url = "https://fonts.googleapis.com/css?family=Esteban", name = "esteban" }
-
-        SecondarySerif ->
-            Font.serif
-
-        Fallback ->
-            Font.sansSerif
-
-
-colorpalette : MyColors -> Color.Color
-colorpalette mycolor =
-    case mycolor of
-        DarkPrimary ->
-            Color.rgb 69 90 100
-
-        Primary ->
-            Color.rgb 96 125 139
-
-        LightPrimary ->
-            Color.rgb 207 216 220
-
-        DarkSecondary ->
-            Color.rgb 123 31 162
-
-        Secondary ->
-            Color.rgb 156 39 176
-
-        LightSecondary ->
-            Color.rgb 225 190 231
-
-        PrimaryText ->
-            Color.rgb 53 45 42
-
-        --33 33 33
-        SecondaryText ->
-            Color.rgb 189 189 189
-
-        White ->
-            Color.rgb 255 255 255
-
-        Black ->
-            Color.rgb 0 0 0
-
-
-stylesheet =
-    Style.styleSheet
-        [ Style.style Background
-            [ Color.background (Color.rgb 159 180 190) ]
-        , Style.style HeaderText
-            [ Color.text (colorpalette LightPrimary)
-            , Font.size 36
-            , Font.typeface
-                [ fontStack Headline
-                , fontStack Fallback
-                ]
-            ]
-        , Style.style Header
-            [ Color.background (colorpalette DarkPrimary)
-            ]
-        , Style.style Card
-            [ Color.background (colorpalette LightPrimary)
-            ]
-        , Style.style CardHeader
-            [ Color.background (colorpalette DarkPrimary)
-            , Color.text (colorpalette LightPrimary)
-            , Font.size 28
-            , Font.typeface
-                [ fontStack Headline
-                , fontStack Fallback
-                ]
-            ]
-        , Style.style CardSubheader
-            [ Color.text (colorpalette DarkPrimary)
-            , Font.size 22
-            , Font.typeface
-                [ fontStack PrimarySans
-                , fontStack Fallback
-                ]
-            ]
-        , Style.style CardText
-            [ Color.text (colorpalette DarkPrimary)
-            , Font.size 18
-            , Font.typeface
-                [ fontStack SecondarySans
-                , fontStack PrimarySans
-                , fontStack Fallback
-                ]
-            ]
-        ]
-
-
-initialModel : Model
-initialModel =
+myInfo : Model
+myInfo =
     { name = "Matthew Stevenson, MD"
     , education =
         [ { description = "Doctor of Medicine", location = "University of Texas Southwestern Medical Center, Dallas, TX", dates = "2003 - 2007" }
@@ -229,62 +160,51 @@ initialModel =
         , { authors = "Amer M. Awad and Mathew Stevenson", title = "Isolated Central Nervous System Vasculitis Associated with Antiribonuclear Protein Antibody", citation = "Case Reports in Neurological Medicine, vol. 2011, Article ID 495201, 4 pages, 2011. doi:10.1155/2011/495201." }
         , { title = "Myopathy with Ataxia: case report of nemaline myopathy associated with a cerebellar ataxia syndrome", authors = "", citation = "February 2010 Carrell-Krusen Neuromuscular Symposium Dallas, TX" }
         ]
-    , interests = [ "Coding in Ruby, Crystal, Elm, HTML, and CSS", "Science fiction and English literature", "Laughter of my wife and children" ]
-    , certifications = [ "ABPN Neurology Certificate: 57880", "WA license: MD60583782", "TX license: P2374", "DEA: ", "BLS Provider exp 11/19" ]
+    , interests = [ "Coding in Ruby, Rust, Elm, HTML, & CSS", "Science fiction and English literature", "Laughter of my wife and children" ]
+    , certifications = [ "ABPN Neurology Certified: 2012", "WA license: unrestricted", "TX license: unrestricted", "DEA: unrestricted", "BLS Provider exp 11/19", "License numbers upon request." ]
     }
 
 
-view model =
-    Element.viewport stylesheet <|
-        (row Header
-            [ spacing 15, padding 15, center, width (percent 100), height (px 72) ]
-            [ el HeaderText
-                [ verticalCenter ]
-                (text model.name)
-            ]
-            |> below
-                [ wrappedRow None
-                    [ spacing 15, padding 15, width (percent 100), height content ]
-                    [ cvCard "Experience" CVExperience model
-                    , cvCard "Training" CVTraining model
-                    , cvCard "Education" CVEducation model
-                    , cvCard "Publications" CVPublications model
-                    , wrappedRow None [ spacing 15, width fill ] [ cvCard "Other Interests" CVInterests model, cvCard "Certifications" CVCerts model ]
-                    ]
+type CVCategory
+    = CVExperience
+    | CVEducation
+    | CVTraining
+    | CVPublications
+    | CVInterests
+    | CVCerts
+
+
+type Style
+    = Header
+    | Subheader
+    | MainText
+    | SubText
+
+
+styling : Style -> List (Attribute msg)
+styling style =
+    case style of
+        Header ->
+            [ Font.color (colorPalette PrimaryLight)
+            , Font.size 36
+            , Font.family
+                [ fontStack Headline
+                , fontStack Fallback
                 ]
-        )
+            ]
+
+        Subheader ->
+            [ Font.color (colorPalette PrimaryLight), Font.size 22, Font.heavy, Font.family [ fontStack PrimarySans, fontStack Headline, fontStack Fallback ] ]
+
+        MainText ->
+            [ Font.color (colorPalette PrimaryLight), Font.size 18, Font.medium, Font.family [ fontStack PrimarySans, fontStack Fallback ] ]
+
+        SubText ->
+            [ Font.color (colorPalette PrimaryLight), Font.size 16, Font.light, Font.family [ fontStack PrimarySans, fontStack Fallback ] ]
 
 
-update model msg =
-    model
-
-
-main =
-    Html.beginnerProgram
-        { model = initialModel
-        , update = update
-        , view = view
-        }
-
-
-
---, (viewExperience model.experience)
---, (viewTraining model.training)
---, (viewEducation model.education)
---, (viewPublications model.publications)
---, (viewInterests model.interests)
---]
---viewEducation : List Education -> Html.Html msg
-
-
-cvCard header category model =
-    column Card
-        [ spacing 10, padding 10, alignLeft, width fill, minWidth (px 400), height fill ]
-        [ paragraph CardHeader [ spacing 10, padding 10, width (percent 100) ] [ el None [ padding 10 ] (text header) ]
-        , column None
-            [ width (percent 100), padding 10 ]
-            (List.foldr (++) [] (cvCardBody category model))
-        ]
+edges =
+    { top = 0, right = 0, left = 0, bottom = 0 }
 
 
 mapFunct category model =
@@ -292,272 +212,116 @@ mapFunct category model =
 
 
 cvCardBody category model =
-    case category of
-        CVEducation ->
-            List.map
-                (\education ->
-                    [ paragraph None [ paddingBottom 5 ] [ el CardSubheader [] (text education.description) ]
-                    , paragraph None [ paddingBottom 5 ] [ el CardText [] (text education.location) ]
-                    , paragraph None [ paddingBottom 20 ] [ el CardText [] (text education.dates) ]
-                    ]
-                )
-                model.education
+    let
+        list =
+            case category of
+                CVEducation ->
+                    (List.map
+                        (\education ->
+                            [ paragraph [ paddingEach { edges | bottom = 5 } ] [ el (styling Subheader) (text education.description) ]
+                            , paragraph [ paddingEach { edges | bottom = 5 } ] [ el (styling MainText) (text education.location) ]
+                            , paragraph [ paddingEach { edges | bottom = 20 } ] [ el (styling SubText) (text education.dates) ]
+                            ]
+                        )
+                        model.education
+                    )
 
-        CVTraining ->
-            List.map
-                (\training ->
-                    [ paragraph None [ paddingBottom 5 ] [ el CardSubheader [] (text training.title) ]
-                    , paragraph None [ paddingBottom 5 ] [ el CardText [] (text training.location) ]
-                    , paragraph None [ paddingBottom 5 ] [ el CardText [] (text training.dates) ]
-                    , paragraph None [ paddingBottom 20 ] [ el CardText [] (text training.description) ]
-                    ]
-                )
-                model.training
+                CVTraining ->
+                    (List.map
+                        (\training ->
+                            [ paragraph [ paddingEach { edges | bottom = 5 } ] [ el (styling Subheader) (text training.title) ]
+                            , paragraph [ paddingEach { edges | bottom = 5 } ] [ el (styling MainText) (text training.location) ]
+                            , paragraph [ paddingEach { edges | bottom = 5 } ] [ el (styling SubText) (text training.dates) ]
+                            , paragraph [ paddingEach { edges | bottom = 20 } ] [ el (styling MainText) (text training.description) ]
+                            ]
+                        )
+                        model.training
+                    )
 
-        CVExperience ->
-            List.map
-                (\experience ->
-                    [ paragraph None [ paddingBottom 3 ] [ el CardSubheader [] (text experience.position) ]
-                    , paragraph None
-                        [ paddingBottom 3 ]
-                        [ el CardText [] (text experience.location) ]
-                    , paragraph None
-                        [ paddingBottom 3 ]
-                        [ el CardText [] (text experience.dates) ]
-                    , paragraph None
-                        [ paddingBottom 20 ]
-                        [ el CardText [] (text experience.description)
-                        ]
-                    ]
-                )
-                model.experience
+                CVExperience ->
+                    (List.map
+                        (\experience ->
+                            [ paragraph [ padding 3 ] [ el (styling Subheader) (text experience.position) ]
+                            , paragraph
+                                [ padding 3 ]
+                                [ el (styling SubText) (text experience.location) ]
+                            , paragraph
+                                [ padding 3 ]
+                                [ el (styling SubText) (text experience.dates) ]
+                            , paragraph
+                                [ paddingEach { top = 5, bottom = 20, left = 3, right = 3 } ]
+                                [ el (styling MainText) (text experience.description)
+                                ]
+                            ]
+                        )
+                        model.experience
+                    )
 
-        CVPublications ->
-            List.map
-                (\publications ->
-                    [ paragraph None [ paddingBottom 3 ] [ el CardSubheader [] (text publications.title) ]
-                    , paragraph None [ paddingBottom 3 ] [ el CardText [] (text publications.authors) ]
-                    , paragraph None [ paddingBottom 10 ] [ el CardText [] (text publications.citation) ]
-                    ]
-                )
-                model.publications
+                CVPublications ->
+                    (List.map
+                        (\publications ->
+                            [ paragraph [ padding 3 ] [ el [] (text publications.title) ]
+                            , paragraph [ padding 3 ] [ el [] (text publications.authors) ]
+                            , paragraph [ padding 10 ] [ el [] (text publications.citation) ]
+                            ]
+                        )
+                        model.publications
+                    )
 
-        CVInterests ->
-            List.map
-                (\interests ->
-                    [ paragraph None [ paddingBottom 4 ] [ el CardText [] (text interests) ]
-                    ]
-                )
-                model.interests
+                CVInterests ->
+                    (List.map
+                        (\interests ->
+                            [ paragraph [ padding 4 ] [ el (styling MainText) (text interests) ]
+                            ]
+                        )
+                        model.interests
+                    )
 
-        CVCerts ->
-            List.map
-                (\certifications ->
-                    [ paragraph None [ paddingBottom 2 ] [ el CardText [] (text certifications) ]
-                    ]
-                )
-                model.certifications
+                CVCerts ->
+                    (List.map
+                        (\certifications ->
+                            [ paragraph [ width (px 256), centerX ] [ el (styling MainText) (text certifications) ]
+                            ]
+                        )
+                        model.certifications
+                    )
+    in
+        column [ centerX, width (fill |> maximum 380), height fill, padding 20 ] (List.foldr (++) [] list)
 
 
-viewEducation education =
-    --    column Card
-    --[ spacing 10, padding 10, alignLeft, width fill, height fill ]
-    --[ paragraph CardHeader [ spacing 10, padding 10, width (percent 100) ] [ el None [ padding 10 ] (text "Education") ]
-    --, column None
-    --            [ width (percent 100), padding 10 ]
-    (List.foldr (++)
-        []
-        (List.map
-            (\education ->
-                [ paragraph None [ paddingBottom 5 ] [ el CardSubheader [] (text education.description) ]
-                , paragraph None [ paddingBottom 5 ] [ el CardText [] (text education.location) ]
-                , paragraph None [ paddingBottom 20 ] [ el CardText [] (text education.dates) ]
+headerBox name tl tr br bl =
+    Element.row [ Border.roundEach { topLeft = tl, topRight = tr, bottomRight = br, bottomLeft = bl }, width (fill), height (px 72), centerX, alignTop, Background.color (colorPalette Primary) ]
+        [ Element.el
+            (List.append
+                [ centerX
+                , centerY
                 ]
+                (styling Header)
             )
-            education
-        )
+            (text name)
+        ]
+
+
+cvCard header tl tr br bl category =
+    (column [ width (fill |> minimum 400), height fill, spacing 10, Border.width 10, Border.color (colorPalette PrimaryLight), Background.color (colorPalette Secondary), Border.roundEach { topLeft = tl, topRight = tr + 10, bottomLeft = bl + 10, bottomRight = br } ]
+        [ (headerBox header tl tr br bl)
+        , cvCardBody category myInfo
+        ]
     )
 
 
-
---]
-
-
-viewTraining training =
-    column Card
-        [ spacing 10, padding 10, alignLeft, width fill, height fill ]
-        [ paragraph CardHeader [ spacing 10, padding 10, width (percent 100) ] [ el None [ padding 10 ] (text "Training") ]
-        , column None
-            [ width (percent 100), padding 10 ]
-            (List.foldr (++)
-                []
-                (List.map
-                    (\training ->
-                        [ paragraph None [ paddingBottom 5 ] [ el CardSubheader [] (text training.title) ]
-                        , paragraph None [ paddingBottom 5 ] [ el CardText [] (text training.location) ]
-                        , paragraph None [ paddingBottom 5 ] [ el CardText [] (text training.dates) ]
-                        , paragraph None [ paddingBottom 20 ] [ el CardText [] (text training.description) ]
-                        ]
-                    )
-                    training
-                )
-            )
-        ]
-
-
-viewExperience experience =
-    column Card
-        [ spacing 10, padding 10, alignLeft, width fill, height fill ]
-        [ paragraph CardHeader [ spacing 10, padding 10, width (percent 100) ] [ el None [] (text "Experience") ]
-        , column None
-            [ width (percent 100), padding 10 ]
-            (List.foldr (++)
-                []
-                (List.map
-                    (\experience ->
-                        [ paragraph None [ paddingBottom 3 ] [ el CardSubheader [] (text experience.position) ]
-                        , paragraph None
-                            [ paddingBottom 3 ]
-                            [ el CardText [] (text experience.location) ]
-                        , paragraph None
-                            [ paddingBottom 3 ]
-                            [ el CardText [] (text experience.dates) ]
-                        , paragraph None
-                            [ paddingBottom 20 ]
-                            [ el CardText [] (text experience.description)
-                            ]
-                        ]
-                    )
-                    experience
-                )
-            )
-        ]
-
-
-viewPublications publications =
-    column Card
-        [ spacing 10, padding 10, alignLeft, width fill, height fill ]
-        [ paragraph CardHeader [ spacing 10, padding 10, width (percent 100) ] [ el None [] (text "Publications") ]
-        , column None
-            [ width (percent 100), padding 10 ]
-            (List.foldr (++)
-                []
-                (List.map
-                    (\publications ->
-                        [ paragraph None [ paddingBottom 3 ] [ el CardSubheader [] (text publications.title) ]
-                        , paragraph None [ paddingBottom 3 ] [ el CardText [] (text publications.authors) ]
-                        , paragraph None [ paddingBottom 10 ] [ el CardText [] (text publications.citation) ]
-                        ]
-                    )
-                    publications
-                )
-            )
-        ]
-
-
-viewInterests interests =
-    column Card
-        [ spacing 10, padding 10, alignLeft, width fill, height fill ]
-        [ paragraph CardHeader [ spacing 10, padding 10, width (percent 100) ] [ el None [] (text "Other Interests") ]
-        , column None
-            [ width (percent 100), padding 10 ]
-            (List.foldr (++)
-                []
-                (List.map
-                    (\interest ->
-                        [ paragraph None [ paddingBottom 5 ] [ el CardText [] (text interest) ]
-                        ]
-                    )
-                    interests
-                )
-            )
-        ]
-
-
-viewCerts certifications =
-    column Card
-        [ spacing 10, padding 10, alignLeft, width fill, height fill ]
-        [ paragraph CardHeader [ spacing 10, padding 10, width (percent 100) ] [ el None [] (text "Certifications") ]
-        , column None
-            [ width (percent 100), padding 10 ]
-            (List.foldr (++)
-                []
-                (List.map
-                    (\certifications ->
-                        [ paragraph None [ paddingBottom 5 ] [ el CardText [] (text certifications) ]
-                        ]
-                    )
-                    certifications
-                )
-            )
-        ]
-
-
-
---viewTraining : List Training -> Html msg
---viewTraining training =
---(List.map
---(\training ->
---ul
---[ style [ ( "list-style-type", "none" ) ]
---, Html.Attributes.class "training"
---]
---[ li [] [ text training.title ]
---, li [] [ text training.location ]
---, li [] [ text training.dates ]
---, li [] [ text training.description ]
---]
---)
---training
---)
---viewExperience : List Experience -> Html msg
---viewExperience experience =
---(List.map
---(\experience ->
---ul
---[ style [ ( "list-style-type", "none" ) ]
---]
---[ li [] [ text experience.position ]
---, li [] [ text experience.location ]
---, li [] [ text experience.dates ]
---, li [] [ text experience.description ]
---]
---)
---experience
---)
---viewPublications : List Publications -> Html msg
---viewPublications publications =
---(List.map
---(\publications ->
---ul
---[ style [ ( "list-style-type", "none" ) ]
---]
---[ li [] [ text publications.title ]
---, li [] [ text publications.authors ]
---, li [] [ text publications.citation ]
---]
---)
---publications
---)
---viewInterests : Interests -> Html msg
---viewInterests interests =
---(List.map
---(\interest ->
---ul
---[ style [ ( "list-style-type", "none" ) ]
---]
---[ li [] [ text interest ]
---]
---)
---interests
---)
---update : msg -> Model -> Model
---update msg model =
---model
---main : Program Never Model Model
---main =
---beginnerProgram
---{ model = initialModel
---, view = view
---, update = update
---}
+main =
+    layout [ Background.color (colorPalette PrimaryLight) ] <|
+        (column
+            [ width fill, spacing 10 ]
+            [ (headerBox
+                myInfo.name
+                0
+                0
+                0
+                0
+              )
+            , (wrappedRow [ height fill, paddingEach { top = 10, left = 20, right = 20, bottom = 0 }, centerX ] [ (cvCard "Education" 0 20 0 20 CVEducation), (cvCard "Training" 0 20 0 20 CVTraining), (cvCard "Experience" 0 20 0 20 CVExperience) ])
+            , (wrappedRow [ width (fill |> maximum 1260), paddingEach { edges | bottom = 30, left = 30, right = 30 }, centerX ] [ cvCard "Other Interests" 0 20 0 20 CVInterests, cvCard "Certifications" 0 20 0 20 CVCerts ])
+            ]
+        )
